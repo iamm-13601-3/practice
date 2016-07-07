@@ -25,7 +25,7 @@ class object //Класс всех объектов
 {
 public:
 	vec color; //Цвет в rgb
-	virtual void draw(void) //Виртуальный метод рисования, конкретный для каждого типа объектов
+	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}
 	object()

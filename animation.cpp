@@ -34,7 +34,7 @@ void anim::display(void) //Общая функция рисования
 		up(0, 1, 0);
 	set_camera(pos, dir, up);
 	for (unsigned int i = 0; i < instance.stack.size(); i++) //Вызов функций рисования для каждого объекта
-		instance.stack[i]->draw();
+		instance.stack[i]->draw(instance.stack);
 	glFinish();
 	glutSwapBuffers();
 }

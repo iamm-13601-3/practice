@@ -8,7 +8,7 @@ class sphere : public object //Пример объекта сфера
 {
 public:
 	double radius;
-	void draw(void)
+	void draw(vector<object*> stack)
 	{
 		glColor3d(color.x, color.y, color.z);
 		glutSolidSphere(radius, 10, 10);

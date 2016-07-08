@@ -8,7 +8,6 @@ class sphere : public object //Пример объекта сфера
 {
 public:
 	double radius;
-	SELESTIAL_BODY_TYPE type;
 
 	void draw(vector<object*> stack)
 	{

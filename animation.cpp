@@ -34,7 +34,9 @@ void anim::display(void) //Общая функция рисования
 		up(0, 1, 0);
 	set_camera(pos, dir, up);
 	for (unsigned int i = 0; i < instance.stack.size(); i++) //Вызов функций рисования для каждого объекта
+	{
 		instance.stack[i]->draw(instance.stack);
+	}
 	glFinish();
 	glutSwapBuffers();
 }
@@ -62,7 +64,7 @@ void anim::mouse(int button, int state, int mouse_x, int mouse_y) //Аналогично с
 		instance.stack[i]->mouse(button, state, mouse_x, mouse_y);
 }
 
-void anim::set_camera(vec pos, vec dir, vec up) //Задание точки обзора и набдюдения
+void anim::set_camera(vec pos, vec dir, vec up) //Задание точки обзора и наблюдения
 {
 	glLoadIdentity();
 	gluLookAt(pos.x, pos.y, pos.z,

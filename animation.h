@@ -7,6 +7,14 @@
 #include <windows.h>
 #include <vector>
 
+//тип обьекта
+typedef enum {
+			  PLANET,
+			  SATELLITE,
+			  STAR,
+			  BACKGROUND,
+}SELESTIAL_BODY_TYPE;
+
 using namespace std;
 
 class vec //Вспомогательный класс
@@ -25,6 +33,7 @@ class object //Класс всех объектов
 {
 public:
 	vec color; //Цвет в rgb
+	SELESTIAL_BODY_TYPE type;
 	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}
@@ -49,7 +58,7 @@ private:
 	static void keyboard(unsigned char key, int x, int y);
 	static void mouse(int button, int state, int mouse_x, int mouse_y);
 	static anim instance; //Единственный экземпляр класса
-	LARGE_INTEGER frequency, start_time; //Перемнные времени
+	LARGE_INTEGER frequency, start_time; //Переменные времени
 	anim();
 public:
 	vector<object*> stack; //Вектор, в котором хранятся все объекты

@@ -17,7 +17,7 @@ typedef enum {
 
 using namespace std;
 
-class vec //Вспомогательный класс
+class vec //Класс вектор
 {
 public:
 	double x, y, z;

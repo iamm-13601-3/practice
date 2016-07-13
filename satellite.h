@@ -79,7 +79,46 @@ public:
 			r.b = vec_transform(r.b, &view.math, &view.screen);
 			glPushMatrix();//запоминаем матрицу
 			glTranslatef(r.b.x , r.b.y ,0);//делаем преобразование
-			glutSolidSphere(radius, 10, 10);//рисование
+			glColor3f(1.0, 0.30, 0.0);
+			glutSolidSphere(radius, 20, 20);
+
+			glColor3f(1.0, 0.027, 0.027);
+			glBegin(GL_LINES);
+
+			glVertex3f(radius, 0.0, 0.0);
+			glVertex3f(radius + 1, 0.0, 0.0);
+
+			glVertex3f(-radius, 0.0, 0.0);
+			glVertex3f(-radius - 1, 0.0, 0.0);
+
+			glVertex3f(0.0, radius, 0.0);
+			glVertex3f(0.0, radius + 1, 0.0);
+
+			glVertex3f(0.0, -radius, 0.0);
+			glVertex3f(0.0, -radius - 1, 0.0);
+			glEnd();
+			//Отрисовка солнечных панелей
+			glBegin(GL_QUADS);
+			glVertex3f(radius + 1, radius - 2, 0.0);
+			glVertex3f(radius + 1, -radius + 2, 0.0);
+			glVertex3f(radius + 7, -radius + 2, 0.0);
+			glVertex3f(radius + 7, radius - 2, 0.0);
+
+			glVertex3f(-radius - 1, radius - 2, 0.0);
+			glVertex3f(-radius - 1, -radius + 2, 0.0);
+			glVertex3f(-radius - 7, -radius + 2, 0.0);
+			glVertex3f(-radius - 7, radius - 2, 0.0);
+
+			glVertex3f(radius - 2, radius + 1, 0.0);
+			glVertex3f(-radius + 2, radius + 1, 0.0);
+			glVertex3f(-radius + 2, radius + 7, 0.0);
+			glVertex3f(radius - 2, radius + 7, 0.0);
+
+			glVertex3f(radius - 2, -radius - 1, 0.0);
+			glVertex3f(-radius + 2, -radius - 1, 0.0);
+			glVertex3f(-radius + 2, -radius - 7, 0.0);
+			glVertex3f(radius - 2, -radius - 7, 0.0);
+			glEnd();
 			glPopMatrix();//возвращаем матрицу на место
 		}
 		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;

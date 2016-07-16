@@ -1,3 +1,4 @@
+#include "animation.h"
 #include "coord_axis.h"
 #include "sphere.h"
 #include "satellite.h"

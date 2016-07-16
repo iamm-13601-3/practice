@@ -1,5 +1,6 @@
 #include "animation.h"
 
+
 anim anim::instance; //Ёкземпл€р класса anim
 
 anim::anim(void) // онстуктор класса anim

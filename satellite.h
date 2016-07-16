@@ -1,7 +1,7 @@
 #ifndef SATELLITE_H_INCLUDED
 #define SATELLITE_H_INCLUDED
 #pragma once
-
+//test change
 #include "animation.h"
 #include "vec_math.h"
 #include "sphere.h"
@@ -18,10 +18,11 @@ public:
 	object_t obj;
 	vec r0, a0;
 	vec k1;
+	vec * trajectory;
 	double r1;
 	object_t obj_work;
 	rect_t r;
-	int counter;
+	int counter, size;
 
 	satellite(double radius, double start_angle, double start_velocity) : sphere(radius)
 	{
@@ -29,6 +30,7 @@ public:
 		type = SATELLITE;
 		this->start_angle = start_angle;
 		velocity = start_velocity;
+		size = 0;
 	}
 
 	void draw(vector<object*> stack)
@@ -48,7 +50,8 @@ public:
 				k1.x = 0;
 				k1.y = 0;
 				k1 = vec_transform(k1, &view.math, &view.screen);
-				V1 = sqrt(G * mass / (2 * rad_planet));
+				//V1 = sqrt(G * mass / (2 * rad_planet));
+				V1 =velocity;
 				r0.x = 0;
 				r0.y = 2 * rad_planet;
 				a0.x = 0;
@@ -72,12 +75,19 @@ public:
 		glColor3d(color.x, color.y, color.z);
 		if (r1 >= rad_planet)
 		{
+			size++;
+			void* temp = realloc(trajectory, size * sizeof(vec));
+			if (temp != NULL)
+				trajectory = (vec*)temp;
+			else
+				exit(MEMORY_ERROR);
 			obj_work = obj;
 			runge_kutta_step(&obj, timer.step(&timer), mass);//Вызов функции, указатель на которую мы получили при вызове
 			rect_set(&r, obj_work.r.x, obj_work.r.y, obj.r.x, obj.r.y);//Заполнение координат вектора
 			r.a = vec_transform(r.a, &view.math, &view.screen);//Перевод кооринат точки в экранные
 			r.b = vec_transform(r.b, &view.math, &view.screen);
 			glPushMatrix();//запоминаем матрицу
+<<<<<<< f116b1e6c0a635d5be1c080d5f62be641d51772c
 			glTranslatef(r.b.x, r.b.y, 0);//делаем преобразование
 			glColor3f(1.0, 0.30, 0.0);
 			glutSolidSphere(radius, 20, 20);
@@ -152,7 +162,18 @@ public:
 			glVertex3f(3 * radius - 2.5, -radius - 7, -radius + 2);
 			glVertex3f(3 * radius - 2.5, -radius - 7, radius - 2);
 			glEnd();
+=======
+			glTranslatef(r.b.x , r.b.y ,0);//делаем преобразование
+			glutSolidSphere(radius, 100, 100);//рисование
+>>>>>>> 7501ac7389c2014ed8dde971ab0748bb417a9df5
 			glPopMatrix();//возвращаем матрицу на место
+			trajectory[size - 1] = { r.b.x, r.b.y, 0 };
+			glBegin(GL_LINE_STRIP);
+				for (int i = 0; i < size; i++)
+				{	
+					glVertex3f(trajectory[i].x, trajectory[i].y, trajectory[i].z);
+				}
+			glEnd();
 		}
 		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;
 		r1 = sqrt(r1);

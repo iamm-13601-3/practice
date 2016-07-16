@@ -1,6 +1,7 @@
 #ifndef OPENGL_H_INCLUDED
 #define OPENGL_H_INCLUDED
 #pragma once
+#define MEMORY_ERROR 1
 
 #include <cstdlib> 
 #include <GL/glut.h>

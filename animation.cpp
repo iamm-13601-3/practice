@@ -29,7 +29,7 @@ anim::anim(void) //Констуктор класса anim
 void anim::display(void) //Общая функция рисования
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Очистка буферов
-	vec pos(50, 50, 50), //Установка позиции наблюдателя
+	vec pos(50, 40, 50), //Установка позиции наблюдателя
 		dir(0, 0, 0),
 		up(0, 1, 0);
 	set_camera(pos, dir, up);
@@ -39,6 +39,14 @@ void anim::display(void) //Общая функция рисования
 	}
 	glFinish();
 	glutSwapBuffers();
+}
+
+void anim::set_camera(vec pos, vec dir, vec up) //Задание точки обзора и наблюдения
+{
+	glLoadIdentity();
+	gluLookAt(pos.x, pos.y, pos.z,
+		dir.x, dir.y, dir.z,
+		up.x, up.y, up.z);
 }
 
 void anim::reshape(int width, int height) //Функция установки области вывода и ситемы координат 
@@ -62,14 +70,6 @@ void anim::mouse(int button, int state, int mouse_x, int mouse_y) //Аналогично с
 {
 	for (unsigned int i = 0; i < instance.stack.size(); i++)
 		instance.stack[i]->mouse(button, state, mouse_x, mouse_y);
-}
-
-void anim::set_camera(vec pos, vec dir, vec up) //Задание точки обзора и наблюдения
-{
-	glLoadIdentity();
-	gluLookAt(pos.x, pos.y, pos.z,
-		dir.x, dir.y, dir.z,
-		up.x, up.y, up.z);
 }
 
 void anim::idle(void) //Обработка в случае остутствия действий

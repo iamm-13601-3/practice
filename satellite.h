@@ -78,46 +78,79 @@ public:
 			r.a = vec_transform(r.a, &view.math, &view.screen);//Перевод кооринат точки в экранные
 			r.b = vec_transform(r.b, &view.math, &view.screen);
 			glPushMatrix();//запоминаем матрицу
-			glTranslatef(r.b.x , r.b.y ,0);//делаем преобразование
+			glTranslatef(r.b.x, r.b.y, 0);//делаем преобразование
 			glColor3f(1.0, 0.30, 0.0);
 			glutSolidSphere(radius, 20, 20);
 
-			glColor3f(1.0, 0.027, 0.027);
+			glColor3f(0.089, 1.0, 0.0);
+			glBegin(GL_QUADS);
+			glVertex3f(radius - 2.5, radius, radius);
+			glVertex3f(radius - 2.5, -radius, radius);
+			glVertex3f(radius - 2.5, -radius, -radius);
+			glVertex3f(radius - 2.5, radius, -radius);
+
+			glVertex3f(radius - 2.5, radius, radius);
+			glVertex3f(radius - 2.5, -radius, radius);
+			glVertex3f(3 * radius - 2.5, -radius, radius);
+			glVertex3f(3 * radius - 2.5, radius, radius);
+
+			glVertex3f(radius - 2.5, radius, -radius);
+			glVertex3f(radius - 2.5, -radius, -radius);
+			glVertex3f(3 * radius - 2.5, -radius, -radius);
+			glVertex3f(3 * radius - 2.5, radius, -radius);
+
+			glVertex3f(radius - 2.5, -radius, radius);
+			glVertex3f(3 * radius - 2.5, -radius, radius);
+			glVertex3f(3 * radius - 2.5, -radius, -radius);
+			glVertex3f(radius - 2.5, -radius, -radius);
+
+			glVertex3f(radius - 2.5, radius, radius);
+			glVertex3f(3 * radius - 2.5, radius, radius);
+			glVertex3f(3 * radius - 2.5, radius, -radius);
+			glVertex3f(radius - 2.5, radius, -radius);
+
+			glVertex3f(3 * radius - 2.5, radius, radius);
+			glVertex3f(3 * radius - 2.5, -radius, radius);
+			glVertex3f(3 * radius - 2.5, -radius, -radius);
+			glVertex3f(3 * radius - 2.5, radius, -radius);
+			glEnd();
+
+			glColor3f(0.89, 0.75, 0.0);
 			glBegin(GL_LINES);
 
-			glVertex3f(radius, 0.0, 0.0);
-			glVertex3f(radius + 1, 0.0, 0.0);
+			glVertex3f(3 * radius - 2.5, 0.0, radius);
+			glVertex3f(3 * radius - 2.5, 0.0, radius + 1);
 
-			glVertex3f(-radius, 0.0, 0.0);
-			glVertex3f(-radius - 1, 0.0, 0.0);
+			glVertex3f(3 * radius - 2.5, 0.0, -radius);
+			glVertex3f(3 * radius - 2.5, 0.0, -radius - 1);
 
-			glVertex3f(0.0, radius, 0.0);
-			glVertex3f(0.0, radius + 1, 0.0);
+			glVertex3f(3 * radius - 2.5, radius, 0.0);
+			glVertex3f(3 * radius - 2.5, radius + 1, 0.0);
 
-			glVertex3f(0.0, -radius, 0.0);
-			glVertex3f(0.0, -radius - 1, 0.0);
+			glVertex3f(3 * radius - 2.5, -radius, 0.0);
+			glVertex3f(3 * radius - 2.5, -radius - 1, 0.0);
 			glEnd();
-			//Отрисовка солнечных панелей
+
 			glBegin(GL_QUADS);
-			glVertex3f(radius + 1, radius - 2, 0.0);
-			glVertex3f(radius + 1, -radius + 2, 0.0);
-			glVertex3f(radius + 7, -radius + 2, 0.0);
-			glVertex3f(radius + 7, radius - 2, 0.0);
+			glVertex3f(3 * radius - 2.5, radius - 2, radius + 1);
+			glVertex3f(3 * radius - 2.5, -radius + 2, radius + 1);
+			glVertex3f(3 * radius - 2.5, -radius + 2, radius + 7);
+			glVertex3f(3 * radius - 2.5, radius - 2, radius + 7);
 
-			glVertex3f(-radius - 1, radius - 2, 0.0);
-			glVertex3f(-radius - 1, -radius + 2, 0.0);
-			glVertex3f(-radius - 7, -radius + 2, 0.0);
-			glVertex3f(-radius - 7, radius - 2, 0.0);
+			glVertex3f(3 * radius - 2.5, radius - 2, -radius - 1);
+			glVertex3f(3 * radius - 2.5, -radius + 2, -radius - 1);
+			glVertex3f(3 * radius - 2.5, -radius + 2, -radius - 7);
+			glVertex3f(3 * radius - 2.5, radius - 2, -radius - 7);
 
-			glVertex3f(radius - 2, radius + 1, 0.0);
-			glVertex3f(-radius + 2, radius + 1, 0.0);
-			glVertex3f(-radius + 2, radius + 7, 0.0);
-			glVertex3f(radius - 2, radius + 7, 0.0);
+			glVertex3f(3 * radius - 2.5, radius + 1, radius - 2);
+			glVertex3f(3 * radius - 2.5, radius + 1, -radius + 2);
+			glVertex3f(3 * radius - 2.5, radius + 7, -radius + 2);
+			glVertex3f(3 * radius - 2.5, radius + 7, radius - 2);
 
-			glVertex3f(radius - 2, -radius - 1, 0.0);
-			glVertex3f(-radius + 2, -radius - 1, 0.0);
-			glVertex3f(-radius + 2, -radius - 7, 0.0);
-			glVertex3f(radius - 2, -radius - 7, 0.0);
+			glVertex3f(3 * radius - 2.5, -radius - 1, radius - 2);
+			glVertex3f(3 * radius - 2.5, -radius - 1, -radius + 2);
+			glVertex3f(3 * radius - 2.5, -radius - 7, -radius + 2);
+			glVertex3f(3 * radius - 2.5, -radius - 7, radius - 2);
 			glEnd();
 			glPopMatrix();//возвращаем матрицу на место
 		}

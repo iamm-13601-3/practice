@@ -161,8 +161,7 @@ public:
 			glVertex3f(3 * radius - 2.5, -radius - 7, -radius + 2);
 			glVertex3f(3 * radius - 2.5, -radius - 7, radius - 2);
 			glEnd();
-			glTranslatef(r.b.x , r.b.y ,0);//делаем преобразование
-			glutSolidSphere(radius, 100, 100);//рисование
+			
 			glPopMatrix();//возвращаем матрицу на место
 			trajectory[size - 1] = { r.b.x, r.b.y, 0 };
 			glBegin(GL_LINE_STRIP);

@@ -31,6 +31,7 @@ public:
 		this->start_angle = start_angle;
 		velocity = start_velocity;
 		size = 0;
+		load_texture("image.bmp"); //Загрузка текстуры
 	}
 
 	void draw(vector<object*> stack)
@@ -141,9 +142,13 @@ public:
 			glEnd();
 
 			glBegin(GL_QUADS);
+			glTexCoord2f(0.0, 0.0); //Задание координат текстуры
 			glVertex3f(3 * radius - 2.5, radius - 2, radius + 1);
+			glTexCoord2f(1.0, 0.0);
 			glVertex3f(3 * radius - 2.5, -radius + 2, radius + 1);
+			glTexCoord2f(1.0, 1.0);
 			glVertex3f(3 * radius - 2.5, -radius + 2, radius + 7);
+			glTexCoord2f(0.0, 1.0);
 			glVertex3f(3 * radius - 2.5, radius - 2, radius + 7);
 
 			glVertex3f(3 * radius - 2.5, radius - 2, -radius - 1);

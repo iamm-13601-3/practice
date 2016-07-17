@@ -5,6 +5,7 @@
 
 #include <cstdlib> 
 #include <GL/glut.h>
+#include <GL/glaux.h>
 #include <windows.h>
 #include <vector>
 
@@ -35,6 +36,7 @@ class object //Класс всех объектов
 public:
 	vec color; //Цвет в rgb
 	SELESTIAL_BODY_TYPE type;
+	GLuint texture[1];
 	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}
@@ -47,6 +49,16 @@ public:
 	}
 	virtual void mouse(int button, int state, int mouse_x, int mouse_y) //Виртуальный метод обработки движений мыши
 	{
+	}
+	virtual void load_texture(LPCSTR name)
+	{
+
+		AUX_RGBImageRec *texture1 = auxDIBImageLoadA(name);
+		glGenTextures(1, &texture[0]);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
 	}
 };
 

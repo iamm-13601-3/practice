@@ -16,6 +16,8 @@ anim::anim(void) //Констуктор класса anim
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 
+	glEnable(GL_TEXTURE_2D); //Включение текстур
+
 	glutDisplayFunc(anim::display); //Вызов функций обработки событий и рисования
 	glutReshapeFunc(anim::reshape);
 	glutKeyboardFunc(anim::keyboard);

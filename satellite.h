@@ -31,7 +31,7 @@ public:
 		this->start_angle = start_angle;
 		velocity = start_velocity;
 		size = 0;
-		load_texture("images/image.bmp"); //Загрузка текстуры
+		load_texture("images/image4.bmp"); //Загрузка текстуры
 	}
 
 	void draw(vector<object*> stack)
@@ -52,7 +52,7 @@ public:
 				k1.y = 0;
 				k1 = vec_transform(k1, &view.math, &view.screen);
 				//V1 = sqrt(G * mass / (2 * rad_planet));
-				V1 =velocity;
+				V1 = velocity;
 				r0.x = 0;
 				r0.y = 2 * rad_planet;
 				a0.x = 0;
@@ -70,7 +70,7 @@ public:
 				timer.start(&timer);
 				//расчёт расстояния между двумя телами
 				r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;
-				r1 = sqrt(r1); 
+				r1 = sqrt(r1);
 			}
 		}
 		glColor3d(color.x, color.y, color.z);
@@ -125,7 +125,7 @@ public:
 			glVertex3f(3 * radius - 2.5, radius, -radius);
 			glEnd();
 
-			glColor3f(0.89, 0.75, 0.0);
+			glColor3f(1.0, 1.0, 1.0);
 			glBegin(GL_LINES);
 
 			glVertex3f(3 * radius - 2.5, 0.0, radius);
@@ -166,14 +166,14 @@ public:
 			glVertex3f(3 * radius - 2.5, -radius - 7, -radius + 2);
 			glVertex3f(3 * radius - 2.5, -radius - 7, radius - 2);
 			glEnd();
-			
+
 			glPopMatrix();//возвращаем матрицу на место
 			trajectory[size - 1] = { r.b.x, r.b.y, 0 };
 			glBegin(GL_LINE_STRIP);
-				for (int i = 0; i < size; i++)
-				{	
-					glVertex3f(trajectory[i].x, trajectory[i].y, trajectory[i].z);
-				}
+			for (int i = 0; i < size; i++)
+			{
+				glVertex3f(trajectory[i].x, trajectory[i].y, trajectory[i].z);
+			}
 			glEnd();
 		}
 		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;

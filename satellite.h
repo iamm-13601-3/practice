@@ -31,7 +31,7 @@ public:
 		this->start_angle = start_angle;
 		velocity = start_velocity;
 		size = 0;
-		load_texture("image.bmp"); //Загрузка текстуры
+		load_texture("images/image.bmp"); //Загрузка текстуры
 	}
 
 	void draw(vector<object*> stack)

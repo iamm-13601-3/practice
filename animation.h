@@ -11,10 +11,10 @@
 
 //тип обьекта
 typedef enum {
-			  PLANET,
-			  SATELLITE,
-			  STAR,
-			  BACKGROUND,
+	PLANET,
+	SATELLITE,
+	STAR,
+	BACKGROUND,
 }SELESTIAL_BODY_TYPE;
 
 using namespace std;
@@ -36,7 +36,7 @@ class object //Класс всех объектов
 public:
 	vec color; //Цвет в rgb
 	SELESTIAL_BODY_TYPE type;
-	GLuint texture[1];
+	GLuint texture[2];
 	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}
@@ -52,7 +52,6 @@ public:
 	}
 	virtual void load_texture(LPCSTR name)
 	{
-
 		AUX_RGBImageRec *texture1 = auxDIBImageLoadA(name);
 		glGenTextures(1, &texture[0]);
 		glBindTexture(GL_TEXTURE_2D, texture[0]);

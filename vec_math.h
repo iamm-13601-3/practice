@@ -10,7 +10,7 @@ double deg_to_rad(double a);
 
 typedef struct
 {
-	vec a, b;
+	vec a, b, c;
 } rect_t;
 
 typedef struct
@@ -34,9 +34,9 @@ typedef struct timer_tag
 	double(*step)(struct timer_tag*);
 } timer_t;
 
-void rect_set(rect_t* r, double x1, double y1, double x2, double y2);
+void rect_set(rect_t* r, double x1, double y1, double z1, double x2, double y2, double z2);
 
-vec vec_create(double x, double y);
+vec vec_create(double x, double y, double z);
 
 vec vec_add(vec a, vec b);
 

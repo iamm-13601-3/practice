@@ -60,8 +60,8 @@ public:
 				rad_planet = mul * ((planet*)stack[0])->radius;
 				mass = ((planet*)stack[0])->mass;
 				//задание экранных и математических координат
-				rect_set(&view.screen, -100.0, -100.0, 100.0, 100.0);
-				rect_set(&view.math, -5 * rad_planet, 5 * rad_planet, 5 * rad_planet, -5 * rad_planet);
+				rect_set(&view.screen, -100.0, -100.0, -100.0, 100.0,  100.0, 100.0);
+				rect_set(&view.math, -5 * rad_planet, -5 * rad_planet, -5 * rad_planet, 5 * rad_planet, 5 * rad_planet, 5 * rad_planet);
 				//начальное положение,скорость, ускорение и угол
 				k1.x = 0;
 				k1.y = 0;
@@ -75,8 +75,12 @@ public:
 
 				obj.t = 0.0;
 				obj.r = r0;
+				//временный костыль, пока нет системы задани€ углов и проекций скоростей
+				V1 *= 5;
+				V1 /= 6;
 				obj.v.x = V1 * cos(deg_to_rad(start_angle));
 				obj.v.y = V1 * sin(deg_to_rad(start_angle));
+				obj.v.z = V1 * sin(deg_to_rad(start_angle));
 				obj.a = a0;
 				//таймер
 				timer.start = real_timer_start;
@@ -99,11 +103,11 @@ public:
 				exit(MEMORY_ERROR);
 			obj_work = obj;
 			runge_kutta_step(&obj, timer.step(&timer), mass);//¬ызов функции, указатель на которую мы получили при вызове
-			rect_set(&r, obj_work.r.x, obj_work.r.y, obj.r.x, obj.r.y);//«аполнение координат вектора
+			rect_set(&r, obj_work.r.x, obj_work.r.y,obj_work.r.z, obj.r.x, obj.r.y, obj.r.z);//«аполнение координат вектора
 			r.a = vec_transform(r.a, &view.math, &view.screen);//ѕеревод кооринат точки в экранные
 			r.b = vec_transform(r.b, &view.math, &view.screen);
 			glPushMatrix();//запоминаем матрицу
-			glTranslatef(r.b.x, r.b.y, 0);//делаем преобразование
+			glTranslatef(r.b.x, r.b.y, r.b.z);//делаем преобразование
 			glColor3f(0.87, 1.0, 0.65);
 			glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
 			glutSolidCone(radius, 8, 20, 20);
@@ -225,7 +229,7 @@ public:
 			glEnd();
 
 			glPopMatrix();//возвращаем матрицу на место
-			trajectory[size - 1] = { r.b.x, r.b.y, 0 };
+			trajectory[size - 1] = { r.b.x, r.b.y, r.b.z };
 			glBegin(GL_LINE_STRIP);
 			for (int i = 0; i < size; i++)
 			{
@@ -233,7 +237,7 @@ public:
 			}
 			glEnd();
 		}
-		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;
+		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y + obj.r.z * obj.r.z;
 		r1 = sqrt(r1);
 	}
 };

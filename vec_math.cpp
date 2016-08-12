@@ -6,41 +6,43 @@ double deg_to_rad(double a)
 }
 
 
-void rect_set(rect_t* r, double x1, double y1, double x2, double y2)
+void rect_set(rect_t* r, double x1, double y1, double z1, double x2, double y2, double z2)
 {
 	r->a.x = x1;
 	r->a.y = y1;
+	r->a.z = z1;
 	r->b.x = x2;
 	r->b.y = y2;
+	r->b.z = z2;
 }
 
-vec vec_create(double x, double y)
+vec vec_create(double x, double y, double z)
 {
-	vec res = { x, y, 0 };
+	vec res = { x, y, z };
 	return res;
 }
 
 vec vec_add(vec a, vec b)
 {
-	vec res = { a.x + b.x, a.y + b.y , 0};
+	vec res = { a.x + b.x, a.y + b.y , a.z + b.z};
 	return res;
 }
 
 vec vec_sub(vec a, vec b)
 {
-	vec res = { a.x - b.x, a.y - b.y, 0 };
+	vec res = { a.x - b.x, a.y - b.y, a.z - b.z };
 	return res;
 }
 
 vec vec_add_mul(vec a, vec b, double t)
 {
-	vec res = { a.x + b.x * t, a.y + b.y * t, 0 };
+	vec res = { a.x + b.x * t, a.y + b.y * t, a.z + b.z * t };
 	return res;
 }
 
 vec vec_mul_double(vec a, double t)
 {
-	vec res = { a.x * t, a.y * t, 0 };
+	vec res = { a.x * t, a.y * t, a.z * t };
 	return res;
 }
 
@@ -49,7 +51,7 @@ vec vec_transform(vec p, rect_t const* from, rect_t const* to)
 	vec res = {
 		to->a.x + (p.x - from->a.x) * (to->b.x - to->a.x) / (from->b.x - from->a.x),
 		to->a.y + (p.y - from->a.y) * (to->b.y - to->a.y) / (from->b.y - from->a.y),
-		0
+		to->a.z + (p.z - from->a.z) * (to->b.z - to->a.z) / (from->b.z - from->a.z),
 	};
 	return res;
 }
@@ -76,7 +78,7 @@ double real_timer_step(struct timer_tag* timer)
 vec force(vec r, double mass)
 {
 	double res = 0;
-	res = sqrt(r.x * r.x + r.y * r.y);
+	res = sqrt(r.x * r.x + r.y * r.y + r.z * r.z);
 	return vec_mul_double(r, -G * mass / pow(res, 3));
 }
 

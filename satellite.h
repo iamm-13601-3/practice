@@ -1,7 +1,7 @@
 #ifndef SATELLITE_H_INCLUDED
 #define SATELLITE_H_INCLUDED
 #pragma once
-//test change
+
 #include "animation.h"
 #include "vec_math.h"
 #include "sphere.h"
@@ -11,6 +11,12 @@
 
 class satellite : public sphere
 {
+private:
+	float a, b, c;
+	int i;
+	GLUquadricObj* disk;
+	AUX_RGBImageRec *texture1, *texture2;
+	GLuint texture[2];
 public:
 	double w, V1, start_angle, rad_planet, velocity, mass;
 	viewport_t view;
@@ -18,14 +24,11 @@ public:
 	object_t obj;
 	vec r0, a0;
 	vec k1;
-	vec * trajectory;
+	vec *trajectory;
 	double r1;
 	object_t obj_work;
 	rect_t r;
 	int counter, size;
-	GLUquadricObj* disk;
-	AUX_RGBImageRec *texture1, *texture2;
-	GLuint texture[2];
 	virtual void load_texture(LPCSTR name1, LPCSTR name2)
 	{
 		texture1 = auxDIBImageLoadA(name1);
@@ -113,7 +116,7 @@ public:
 			glTranslatef(r.b.x, r.b.y, r.b.z);//делаем преобразование
 			glColor3f(0.87, 1.0, 0.65);
 			glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
-			glutSolidCone(radius, 8, 20, 20);
+			glutSolidCone(radius, radius + (radius + 1), 20, 20);
 			disk = gluNewQuadric();
 			gluDisk(disk, 0, radius, 20, 20);
 
@@ -122,116 +125,107 @@ public:
 			glColor3f(1.0, 1.0, 0.56);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(radius - 11.5, radius, radius);
+			glVertex3f(radius - (radius * 4), radius, radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(radius - 11.5, -radius, radius);
+			glVertex3f(radius - (radius * 4), -radius, radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(radius - 11.5, -radius, -radius);
+			glVertex3f(radius - (radius * 4), -radius, -radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(radius - 11.5, radius, -radius);
+			glVertex3f(radius - (radius * 4), radius, -radius);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(radius - 11.5, radius, radius);
+			glVertex3f(radius - (radius * 4), radius, radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(radius - 11.5, -radius, radius);
+			glVertex3f(radius - (radius * 4), -radius, radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius, radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius, radius);
+			glVertex3f(3 * radius - (radius * 4), radius, radius);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(radius - 11.5, radius, -radius);
+			glVertex3f(radius - (radius * 4), radius, -radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(radius - 11.5, -radius, -radius);
+			glVertex3f(radius - (radius * 4), -radius, -radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, -radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), radius, -radius);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(radius - 11.5, -radius, radius);
+			glVertex3f(radius - (radius * 4), -radius, radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius, radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, -radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(radius - 11.5, -radius, -radius);
+			glVertex3f(radius - (radius * 4), -radius, -radius);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(radius - 11.5, radius, radius);
+			glVertex3f(radius - (radius * 4), radius, radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, radius, radius);
+			glVertex3f(3 * radius - (radius * 4), radius, radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), radius, -radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(radius - 11.5, radius, -radius);
+			glVertex3f(radius - (radius * 4), radius, -radius);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(3 * radius - 11.5, radius, radius);
+			glVertex3f(3 * radius - (radius * 4), radius, radius);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius, radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, radius);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), -radius, -radius);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius, -radius);
+			glVertex3f(3 * radius - (radius * 4), radius, -radius);
 			glEnd();
 
-			glColor3f(1.0, 1.0, 1.0);
-			glBegin(GL_LINES);
-
-			glVertex3f(3 * radius - 11.5, 0.0, radius);
-			glVertex3f(3 * radius - 11.5, 0.0, radius + 1);
-
-			glVertex3f(3 * radius - 11.5, 0.0, -radius);
-			glVertex3f(3 * radius - 11.5, 0.0, -radius - 1);
-
-			glVertex3f(3 * radius - 11.5, radius, 0.0);
-			glVertex3f(3 * radius - 11.5, radius + 1, 0.0);
-
-			glVertex3f(3 * radius - 11.5, -radius, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius - 1, 0.0);
-			glEnd();
-
+			glColor3f(1.0, 1.0, 1.0);//рисуем солнечные панели
 			glBindTexture(GL_TEXTURE_2D, texture[1]);
 			glTexImage2D(GL_TEXTURE_2D, 0, 3, texture2->sizeX, texture2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2->data);
 
-			glBegin(GL_QUADS);
-			glTexCoord2f(0.0, 0.0); //Задание координат текстуры
-			glVertex3f(3 * radius - 11.5, radius - 2, radius + 1);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius + 2, radius + 1);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius + 2, radius + 7);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius - 2, radius + 7);
+			for (i = 0; i < 6; i++)
+			{
+				if (i == 0)
+				{
+					a = 1;
+					b = 3;
+					c = 0;
+				}
+				else
+				{
+					c = b;
+					a = b + 0.5;
+					b = a + 2;
+				}
+				glBegin(GL_LINES);
 
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(3 * radius - 11.5, radius - 2, -radius - 1);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius + 2, -radius - 1);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius + 2, -radius - 7);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius - 2, -radius - 7);
+				glVertex3f(3 * radius - (radius * 4), 0.0, radius + c);
+				glVertex3f(3 * radius - (radius * 4), 0.0, radius + a);
 
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(3 * radius - 11.5, radius + 1, radius - 2);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, radius + 1, -radius + 2);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius + 7, -radius + 2);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, radius + 7, radius - 2);
+				glVertex3f(3 * radius - (radius * 4), 0.0, -radius - c);
+				glVertex3f(3 * radius - (radius * 4), 0.0, -radius - a);
+				glEnd();
 
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius - 1, radius - 2);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(3 * radius - 11.5, -radius - 1, -radius + 2);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius - 7, -radius + 2);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(3 * radius - 11.5, -radius - 7, radius - 2);
-			glEnd();
+				glBegin(GL_QUADS);
+				glTexCoord2f(0.0, 0.0); //Задание координат текстуры
+				glVertex3f(3 * radius - (radius * 4), radius - 5, radius + a);
+				glTexCoord2f(1.0, 0.0);
+				glVertex3f(3 * radius - (radius * 4), -radius + 5, radius + a);
+				glTexCoord2f(1.0, 1.0);
+				glVertex3f(3 * radius - (radius * 4), -radius + 5, radius + b);
+				glTexCoord2f(0.0, 1.0);
+				glVertex3f(3 * radius - (radius * 4), radius - 5, radius + b);
+
+				glTexCoord2f(0.0, 0.0);
+				glVertex3f(3 * radius - (radius * 4), radius - 5, -radius - a);
+				glTexCoord2f(1.0, 0.0);
+				glVertex3f(3 * radius - (radius * 4), -radius + 5, -radius - a);
+				glTexCoord2f(1.0, 1.0);
+				glVertex3f(3 * radius - (radius * 4), -radius + 5, -radius - b);
+				glTexCoord2f(0.0, 1.0);
+				glVertex3f(3 * radius - (radius * 4), radius - 5, -radius - b);
+				glEnd();
+			}
 
 			glPopMatrix();//возвращаем матрицу на место
 			trajectory[size - 1] = { r.b.x, r.b.y, r.b.z };

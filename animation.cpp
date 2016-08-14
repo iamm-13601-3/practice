@@ -11,10 +11,15 @@ anim::anim(void) //Констуктор класса anim
 	glutCreateWindow("OpenGL"); //Создание окна
 
 	glEnable(GL_LIGHTING); //Освещение
-	glEnable(GL_LIGHT0);
+	//glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
+	GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0 };
+	GLfloat light1_position[] = { 0.0, 20.0, 0, 1.0 };
+	glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
 	glEnable(GL_TEXTURE_2D); //Включение текстур
 
@@ -36,6 +41,7 @@ void anim::display(void) //Общая функция рисования
 		dir(0, 0, 0),
 		up(0, 1, 0);
 	set_camera(pos, dir, up);
+	glRotated(get_time() * 5, 0, 1, 0);
 	for (unsigned int i = 0; i < instance.stack.size(); i++) //Вызов функций рисования для каждого объекта
 	{
 		instance.stack[i]->draw(instance.stack);

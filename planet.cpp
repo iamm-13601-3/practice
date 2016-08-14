@@ -40,7 +40,7 @@ void planet::draw(vector<object*> stack)
 	gluQuadricDrawStyle(quadObj, GLU_FILL);
 	glColor3d(1,1,1);
 	glPushMatrix();
-	glRotated(9, 0, 0, 0);
+//	glRotated(9, 0, 0, 0);
 	gluSphere(quadObj, radius, 1000, 1000);
 	glPopMatrix();
 	gluDeleteQuadric(quadObj);

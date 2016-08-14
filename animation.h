@@ -36,7 +36,7 @@ class object //Класс всех объектов
 public:
 	vec color; //Цвет в rgb
 	SELESTIAL_BODY_TYPE type;
-	GLuint texture[2];
+	GLuint texture[1];
 	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}

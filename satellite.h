@@ -24,15 +24,18 @@ public:
 	rect_t r;
 	int counter, size;
 	GLUquadricObj* disk;
+	AUX_RGBImageRec *texture1, *texture2;
+	GLuint texture[2];
 	virtual void load_texture(LPCSTR name1, LPCSTR name2)
 	{
-		AUX_RGBImageRec *texture1 = auxDIBImageLoadA(name1);
+		texture1 = auxDIBImageLoadA(name1);
 		glGenTextures(1, &texture[0]);
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
-		AUX_RGBImageRec *texture2 = auxDIBImageLoadA(name2);
+
+		texture2 = auxDIBImageLoadA(name2);
 		glGenTextures(2, &texture[1]);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -190,6 +193,8 @@ public:
 			glEnd();
 
 			glBindTexture(GL_TEXTURE_2D, texture[1]);
+			glTexImage2D(GL_TEXTURE_2D, 0, 3, texture2->sizeX, texture2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2->data);
+
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0, 0.0); //Задание координат текстуры
 			glVertex3f(3 * radius - 11.5, radius - 2, radius + 1);

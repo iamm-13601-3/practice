@@ -1,13 +1,23 @@
+#ifndef PLANET_H_INCLUDED
+#define PLANET_H_INCLUDED 1
 #pragma once
-#include "sphere.h"
 
-class planet : public sphere
+#include "animation.h"
+
+
+
+void LoadTexImage(char *FileName);
+
+class planet : public object 
 {
-	public:
-		double mass;
-		planet(double radius, double mass) : sphere(radius)
-		{
-			this->mass = mass;
-			this->type = PLANET;
-		}
+private:
+	
+public:
+	double radius, mass;
+	static planet instance;
+	planet();
+	void draw(vector<object*> stack);
+	planet(double radius, double mass);
 };
+
+#endif

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "animation.h"
+#include "satellite.h"
 
 class background : public object
 {

@@ -1,5 +1,4 @@
-#include "animation.h"
-
+#include "background.h"
 
 anim anim::instance; //Ёкземпл€р класса anim
 
@@ -60,9 +59,14 @@ void anim::set_camera(vec pos, vec dir, vec up) //«адание точки обзора и наблюде
 
 void anim::reshape(int width, int height) //‘ункци€ установки области вывода и ситемы координат 
 {
+	double size = 300 * 1.8;
+
+	for (unsigned int i = 0; i < instance.stack.size(); i++)
+		if (instance.stack[i]->type == BACKGROUND)
+			size = ((background*)(instance.stack[i]))->size * 4 + 20;
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
-	gluPerspective(90, (double) width / height, 1, 1000);
+	gluPerspective(90, (double) width / height, 1, size);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

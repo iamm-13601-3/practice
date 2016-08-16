@@ -114,6 +114,48 @@ public:
 			r.b = vec_transform(r.b, &view.math, &view.screen);
 			glPushMatrix();//запоминаем матрицу
 			glTranslatef(r.b.x, r.b.y, r.b.z);//делаем преобразование
+			
+			double k = 10, 
+				k1 = 150, k2 = k1 * k, k3 = 30, 
+				k4 = 1.0 / 3, k5 = k4 * k, k6 = k3,
+				r1;
+
+			glLineWidth(3);
+				
+			glPushMatrix();
+			
+			r1 = sqrt(obj.v.x * obj.v.x + obj.v.y * obj.v.y + obj.v.z * obj.v.z) / k1;
+			glBegin(GL_LINES);
+			glColor3f(1, 0, 0);
+			glVertex3f(0, 0, 0);
+			glVertex3f(obj.v.x / k1, obj.v.y / k1, obj.v.z / k1);
+			glEnd();
+			glTranslatef(obj.v.x / k1, obj.v.y / k1, obj.v.z / k1);
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(-obj.v.x / k2 + r1 / k3, -obj.v.y / k2 + r1 / k3, -obj.v.z / k2 + r1 / k3);
+			glVertex3f(0, 0, 0);
+			glVertex3f(-obj.v.x / k2 - r1 / k3, -obj.v.y / k2 - r1 / k3, -obj.v.z / k2 - r1 / k3);
+			glEnd();
+			glPopMatrix();
+
+			glPushMatrix();
+
+			r1 = sqrt(obj.a.x * obj.a.x + obj.a.y * obj.a.y + obj.a.z * obj.a.z) / k4;
+			glBegin(GL_LINES);
+			glColor3f(0, 1, 0);
+			glVertex3f(0, 0, 0);
+			glVertex3f(obj.a.x / k4, obj.a.y / k4, obj.a.z / k4);
+			glEnd();
+			glTranslatef(obj.a.x / k4, obj.a.y / k4, obj.a.z / k4);
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(-obj.a.x / k5 + r1 / k6, -obj.a.y / k5 + r1 / k6, -obj.a.z / k5 + r1 / k6);
+			glVertex3f(0, 0, 0);
+			glVertex3f(-obj.a.x / k5 - r1 / k6, -obj.a.y / k5 - r1 / k6, -obj.a.z / k5 - r1 / k6);
+			glEnd();
+			glPopMatrix();
+
+			glLineWidth(2);
+
 			glColor3f(0.87, 1.0, 0.65);
 			glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
 			glutSolidCone(radius, radius + (radius + 1), 20, 20);

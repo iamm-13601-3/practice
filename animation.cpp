@@ -6,19 +6,13 @@ anim::anim(void) //Констуктор класса anim
 {
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); //Стандартная настройка вывода
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(1000, 1000);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("OpenGL"); //Создание окна
 
 	glEnable(GL_LIGHTING); //Освещение
-	//glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
-	GLfloat light1_diffuse[] = { 1.0, 1.0, 1.0 };
-	GLfloat light1_position[] = { 0.0, 20.0, 0, 1.0 };
-	glEnable(GL_LIGHT1);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
 	glEnable(GL_TEXTURE_2D); //Включение текстур
 
@@ -35,16 +29,26 @@ anim::anim(void) //Констуктор класса anim
 
 void anim::display(void) //Общая функция рисования
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Очистка буферов
 	vec pos(50, 40, 50), //Установка позиции наблюдателя
 		dir(0, 0, 0),
 		up(0, 1, 0);
+	GLfloat light1_diffuse[] = {1.0, 1.0, 1.0};
+	GLfloat light1_position[] = {
+		100.0 /** sin(get_time())*/,
+		100.0 /** cos(get_time())*/,
+		0, 
+		1.0};
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Очистка буферов
 	set_camera(pos, dir, up);
+	glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+	glPushMatrix();
 	glRotated(get_time() * 5, 0, 1, 0);
 	for (unsigned int i = 0; i < instance.stack.size(); i++) //Вызов функций рисования для каждого объекта
-	{
 		instance.stack[i]->draw(instance.stack);
-	}
+	glPopMatrix();
 	glFinish();
 	glutSwapBuffers();
 }
@@ -66,9 +70,9 @@ void anim::reshape(int width, int height) //Функция установки области вывода и с
 			size = ((background*)(instance.stack[i]))->size * 4 + 20;
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	gluPerspective(90, (double) width / height, 1, size);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void anim::keyboard(unsigned char key, int x, int y) //Обработка нажатий на клавиатуру

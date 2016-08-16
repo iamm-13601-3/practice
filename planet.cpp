@@ -3,7 +3,6 @@
 
 #pragma warning(disable:4996)
 
-
 planet planet::instance; 
 
 AUX_RGBImageRec* photo_image;
@@ -40,8 +39,11 @@ void planet::draw(vector<object*> stack)
 	gluQuadricDrawStyle(quadObj, GLU_FILL);
 	glColor3d(1,1,1);
 	glPushMatrix();
-//	glRotated(9, 0, 0, 0);
+	glRotated(66.5, -1, 0, 0);
+	glPushMatrix();
+	glRotated(anim::get_time() * 5, 0, 0, 1);
 	gluSphere(quadObj, radius, 1000, 1000);
+	glPopMatrix();
 	glPopMatrix();
 	gluDeleteQuadric(quadObj);
 	auxSwapBuffers();

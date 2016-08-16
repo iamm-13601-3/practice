@@ -7,6 +7,7 @@
 #define GRAVITY      9.8
 
 double deg_to_rad(double a);
+double rad_to_deg(double a);
 
 typedef struct
 {

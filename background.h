@@ -31,7 +31,7 @@ public:
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
 
 		for (unsigned int i = 0; i < stack.size(); i++) //Расширение фона при подлете спутника к нему
-			if (stack[i]->type = SATELLITE)
+			if (stack[i]->type == SATELLITE)
 				if (((satellite*)stack[i])->r.b.x > size - 20 ||
 					((satellite*)stack[i])->r.b.y > size - 20 ||
 					((satellite*)stack[i])->r.b.z > size - 20)
@@ -42,12 +42,12 @@ public:
 
 		glTexCoord2f(1.0 / 2, 2.0 / 3);
 		glVertex3f(size, size, size);
-		glTexCoord2f(3.0 / 4, 2.0 / 3);
-		glVertex3f(size, size, -size);
-		glTexCoord2f(3.0 / 4, 1.0 / 3);
-		glVertex3f(size, -size, -size);
 		glTexCoord2f(1.0 / 2, 1.0 / 3);
 		glVertex3f(size, -size, size);
+		glTexCoord2f(3.0 / 4, 1.0 / 3);
+		glVertex3f(size, -size, -size);
+		glTexCoord2f(3.0 / 4, 2.0 / 3);
+		glVertex3f(size, size, -size);
 
 		glTexCoord2f(1.0 / 2, 2.0 / 3);
 		glVertex3f(size, size, size);

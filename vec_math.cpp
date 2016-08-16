@@ -1,10 +1,14 @@
-#include"vec_math.h"
+#include "vec_math.h"
 
 double deg_to_rad(double a)
 {
 	return a * PI / 180.0;
 }
 
+double rad_to_deg(double a)
+{
+	return a * 180.0 / PI;
+}
 
 void rect_set(rect_t* r, double x1, double y1, double z1, double x2, double y2, double z2)
 {

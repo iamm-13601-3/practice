@@ -8,6 +8,7 @@
 #include "planet.h"
 
 #define mul (6371e3 / 10)
+#define math_size 15
 
 class satellite : public sphere
 {
@@ -67,7 +68,7 @@ public:
 				mass = ((planet*)stack[0])->mass;
 				//задание экранных и математических координат
 				rect_set(&view.screen, -100.0, -100.0, -100.0, 100.0,  100.0, 100.0);
-				rect_set(&view.math, -5 * rad_planet, -5 * rad_planet, -5 * rad_planet, 5 * rad_planet, 5 * rad_planet, 5 * rad_planet);
+				rect_set(&view.math, -5 * math_size * mul, -5 * math_size * mul, -5 * math_size * mul, 5 * math_size * mul, 5 * math_size * mul, 5 * math_size * mul);
 				//начальное положение,скорость, ускорение и угол
 				k1.x = 0;
 				k1.y = 0;
@@ -75,9 +76,9 @@ public:
 				//V1 = sqrt(G * mass / (2 * rad_planet));
 				V1 = velocity;
 				r0.x = 0;
-				r0.y = 2 * rad_planet;
+				r0.y = 2 * math_size * mul;
 				a0.x = 0;
-				a0.y = -G * mass / (rad_planet * rad_planet);
+				a0.y = -G * mass / (math_size * mul * math_size * mul);
 
 				obj.t = 0.0;
 				obj.r = r0;

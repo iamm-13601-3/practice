@@ -102,4 +102,5 @@ void runge_kutta_step(object_t* obj, double dt, double mass)
 
 	obj->r = vec_add(obj->r, vec_mul_double(vec_add(vec_add(v1, vec_mul_double(v2, 2)), vec_add(v4, vec_mul_double(v3, 2))), dt / 6));
 	obj->v = vec_add(obj->v, vec_mul_double(vec_add(vec_add(a1, vec_mul_double(a2, 2)), vec_add(a4, vec_mul_double(a3, 2))), dt / 6));
+	obj->a = a4;
 }

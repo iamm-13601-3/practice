@@ -4,6 +4,8 @@ anim anim::instance; //Экземпляр класса anim
 
 anim::anim(void) //Констуктор класса anim
 {
+	FreeConsole(); //Отключение вызова консоли
+
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); //Стандартная настройка вывода
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(800, 800);

@@ -41,7 +41,7 @@ void planet::draw(vector<object*> stack)
 	glPushMatrix();
 	glRotated(66.5, -1, 0, 0);
 	glPushMatrix();
-	glRotated(anim::get_time() * 5, 0, 0, 1);
+	glRotated(anim::get_time() * 15, 0, 0, 1);
 	gluSphere(quadObj, radius, 1000, 1000);
 	glPopMatrix();
 	glPopMatrix();

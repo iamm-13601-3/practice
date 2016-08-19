@@ -118,7 +118,7 @@ public:
 			
 			double k = 10, 
 				k1 = 150, k2 = k1 * k, k3 = 30, 
-				k4 = 1.0 / 3, k5 = k4 * k, k6 = k3,
+				k4 = 1.0 / 10, k5 = k4 * k, k6 = k3,
 				r1;
 
 			glLineWidth(3);

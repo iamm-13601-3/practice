@@ -7,6 +7,7 @@
 class axis : public object //Пример объекта система координат
 {
 public:
+	double radius;
 	void draw(vector<object*> stack)
 	{
 		glBegin(GL_LINES);

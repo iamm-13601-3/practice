@@ -71,36 +71,76 @@ void real_timer_start(struct timer_tag* timer)
 
 double real_timer_step(struct timer_tag* timer)
 {
-	double dt = 0.5;
+	double dt = 0.2;
 	LARGE_INTEGER begin;
 	begin = timer->last;
 	QueryPerformanceCounter(&timer->last);
 	dt = (double)(timer->last.QuadPart - begin.QuadPart) / (double)timer->freq.QuadPart;
-	return dt * 3600;
+	return dt * 3600 ;
 }
 
-vec force(vec r, double mass)
+vec force(vec planet_coord, vec sat_coord, double planet_mass, double sat_mass)
+{
+	double len = sqrt(pow(planet_coord.x - sat_coord.x, 2) + pow(planet_coord.y - sat_coord.y, 2) + pow(planet_coord.z - sat_coord.z, 2));
+	double F = G * planet_mass * sat_mass / pow(len,2);
+	vec res = { (planet_coord.x - sat_coord.x) / len * F,
+				(planet_coord.y - sat_coord.y) / len * F ,
+				(planet_coord.z - sat_coord.z) / len * F };
+	return res;
+}
+
+vec A1(vec r, double mass)
 {
 	double res = 0;
 	res = sqrt(r.x * r.x + r.y * r.y + r.z * r.z);
 	return vec_mul_double(r, -G * mass / pow(res, 3));
 }
 
-void runge_kutta_step(object_t* obj, double dt, double mass)
+void euler_step(object_t* obj, double dt)
 {
+	obj->v = vec_add_mul(obj->v, obj->a, dt);
+	obj->r = vec_add_mul(obj->r, obj->v, dt);
+
+}
+
+void euler_step_advanced(object_t* obj, double dt)
+{
+	double t;
+	for (t = 0; t <= dt; t += MAX_DT)
+	{
+		obj->v = vec_add_mul(obj->v, obj->a, MAX_DT);
+		obj->r = vec_add_mul(obj->r, obj->v, MAX_DT);
+	}
+	obj->v = vec_add_mul(obj->v, obj->a, dt - t + MAX_DT);
+	obj->r = vec_add_mul(obj->r, obj->v, dt - t + MAX_DT);
+}
+
+void runge_kutta_step(object_t* obj, double dt, double mass_planet, double mass_sat)
+{
+	double mass = mass_planet * mass_sat;
 	vec a1, a2, a3, a4,     //ускорение
 		v1, v2, v3, v4;           //скорость   
 
 	v1 = obj->v;
-	a1 = force(obj->r, mass);
+	a1 = A1(obj->r, mass);
 	v2 = vec_add(obj->v, vec_mul_double(a1, dt / 2));
-	a2 = force(vec_add(obj->r, vec_mul_double(v1, dt / 2)), mass);
+	a2 = A1(vec_add(obj->r, vec_mul_double(v1, dt / 2)), mass);
 	v3 = vec_add(obj->v, vec_mul_double(a2, dt / 2));
-	a3 = force(vec_add(obj->r, vec_mul_double(v2, dt / 2)), mass);
+	a3 = A1(vec_add(obj->r, vec_mul_double(v2, dt / 2)), mass);
 	v4 = vec_add(obj->v, vec_mul_double(a3, dt));
-	a4 = force(vec_add(obj->r, vec_mul_double(v3, dt)), mass);
+	a4 = A1(vec_add(obj->r, vec_mul_double(v3, dt)), mass);
 
 	obj->r = vec_add(obj->r, vec_mul_double(vec_add(vec_add(v1, vec_mul_double(v2, 2)), vec_add(v4, vec_mul_double(v3, 2))), dt / 6));
 	obj->v = vec_add(obj->v, vec_mul_double(vec_add(vec_add(a1, vec_mul_double(a2, 2)), vec_add(a4, vec_mul_double(a3, 2))), dt / 6));
 	obj->a = a4;
+}
+
+double range(vec a, vec b)
+{
+	double res;
+	res = pow(a.x - b.x, 2) +
+		  pow(a.y - b.y, 2) +
+		  pow(a.z - b.z, 2);
+	res = sqrt(res);
+	return res;
 }

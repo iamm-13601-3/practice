@@ -3,6 +3,8 @@
 #pragma once
 
 #define MEMORY_ERROR 1
+#define mul (6371e3 / 10)
+#define math_size 15
 
 #include <cstdlib> 
 #include <GL/glut.h>
@@ -134,11 +136,6 @@ private:
 	static anim instance; //Единственный экземпляр класса
 	LARGE_INTEGER frequency, start_time; //Переменные времени
 	anim();
-	~anim() //Очистка памяти
-	{
-		for (unsigned int i = 0; i < stack.size(); i++)
-			delete stack[i];
-	}
 public:
 	vector<object*> stack; //Вектор, в котором хранятся все объекты
 	double time;

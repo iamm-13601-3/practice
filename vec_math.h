@@ -1,10 +1,12 @@
 #pragma once
 #include<windows.h>
+#include<math.h>
 #include"animation.h"
 
 #define PI           3.14159265358979323846
 #define G            6.68e-11
 #define GRAVITY      9.8
+#define MAX_DT 0.004
 
 double deg_to_rad(double a);
 double rad_to_deg(double a);
@@ -53,6 +55,14 @@ void real_timer_start(struct timer_tag* timer);
 
 double real_timer_step(struct timer_tag* timer);
 
-vec force(vec r, double mass);
+vec force(vec planet_coord, vec sat_coord, double planet_mass, double sat_mass);
 
-void runge_kutta_step(object_t* obj, double dt, double mass);
+vec A1(vec r, double mass);
+
+void runge_kutta_step(object_t* obj, double dt, double mass_planet, double mass_sat);
+
+void euler_step(object_t* obj, double dt);
+
+void euler_step_advanced(object_t* obj, double dt);
+
+double range(vec a, vec b);

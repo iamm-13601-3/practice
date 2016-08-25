@@ -7,29 +7,29 @@
 #include "sphere.h"
 #include "planet.h"
 
-#define mul (6371e3 / 10)
-#define math_size 15
 
 class satellite : public sphere
 {
 private:
 	float a, b, c;
-//	int i;
+	int i;
 	GLUquadricObj* disk;
 	AUX_RGBImageRec *texture1, *texture2;
 	GLuint texture[2];
 public:
-	double w, V1, start_angle, rad_planet, velocity, mass;
+	double w, *planet_rad, *planet_mass, self_mass;
 	viewport_t view;
 	timer_t timer;
 	object_t obj;
-	vec r0, a0;
+	vec r0, a0, start_velocity, start_pos, *planet_pos;
 	vec k1;
 	vec *trajectory;
-	double r1;
+	double* dist;
 	object_t obj_work;
+	bool alive;
 	rect_t r;
 	int counter, size;
+	unsigned int planet_count;
 	virtual void load_texture(LPCSTR name1, LPCSTR name2)
 	{
 		texture1 = auxDIBImageLoadA(name1);
@@ -46,13 +46,17 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture2->sizeX, texture2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2->data);
 	}
-	satellite(double radius, double start_angle, double start_velocity) : sphere(radius)
+	satellite(double radius, vec start_pos, vec start_velocity, double mass) : sphere(radius)
 	{
 		counter = 0;
 		type = SATELLITE;
-		this->start_angle = start_angle;
-		velocity = start_velocity;
+		this->start_velocity = start_velocity;
+		this->start_pos = start_pos;
+		this->self_mass = mass;
 		size = 0;
+		planet_count = 0;
+		alive = true;
+		obj.a = { 0, 0, 0 };
 		load_texture("images/image2.bmp", "images/image4.bmp"); //Загрузка текстуры
 	}
 
@@ -62,10 +66,14 @@ public:
 		if (counter == 0)
 		{
 			counter++;
-			if (((planet*)stack[0])->type == PLANET)
+			while (((planet*)stack[planet_count++])->type == PLANET)
 			{
-				rad_planet = mul * ((planet*)stack[0])->radius;
-				mass = ((planet*)stack[0])->mass;
+				planet_pos = (vec*)realloc(planet_pos,planet_count * sizeof(vec));
+				planet_mass = (double*)realloc(planet_mass, planet_count * sizeof(double));
+				planet_rad = (double*)realloc(planet_rad, planet_count * sizeof(double));
+				planet_pos[planet_count - 1] = ((planet*)stack[planet_count - 1])->coord;
+				planet_rad[planet_count - 1] = mul * ((planet*)stack[planet_count - 1])->radius;
+				planet_mass[planet_count - 1] = ((planet*)stack[planet_count - 1])->mass;
 				//задание экранных и математических координат
 				rect_set(&view.screen, -100.0, -100.0, -100.0, 100.0,  100.0, 100.0);
 				rect_set(&view.math, -5 * math_size * mul, -5 * math_size * mul, -5 * math_size * mul, 5 * math_size * mul, 5 * math_size * mul, 5 * math_size * mul);
@@ -73,34 +81,34 @@ public:
 				k1.x = 0;
 				k1.y = 0;
 				k1 = vec_transform(k1, &view.math, &view.screen);
-				//V1 = sqrt(G * mass / (2 * rad_planet));
-				V1 = velocity;
-				r0.x = 0;
-				r0.y = 2 * math_size * mul;
-				a0.x = 0;
-				a0.y = -G * mass / (math_size * mul * math_size * mul);
 
 				obj.t = 0.0;
-				obj.r = r0;
-				//временный костыль, пока нет системы задания углов и проекций скоростей
-				V1 *= 5;
-				V1 /= 6;
-				obj.v.x = V1 * cos(deg_to_rad(start_angle));
-				obj.v.y = V1 * sin(deg_to_rad(start_angle));
-				obj.v.z = V1 * sin(deg_to_rad(start_angle));
-				obj.a = a0;
+				obj.r = start_pos;
+
+				obj.v.x = start_velocity.x;
+				obj.v.y = start_velocity.y;
+				obj.v.z = start_velocity.z;
+
 				//таймер
 				timer.start = real_timer_start;
 				timer.step = real_timer_step;
 
 				timer.start(&timer);
 				//расчёт расстояния между двумя телами
-				r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y;
-				r1 = sqrt(r1);
+				dist = (double*)realloc(dist, planet_count * sizeof(double));
+				dist[planet_count - 1] = range(obj.r, planet_pos[planet_count - 1]);
 			}
+			planet_count--;
 		}
+
 		glColor3d(color.x, color.y, color.z);
-		if (r1 >= rad_planet)
+		int i = 0;
+		for (i = 0; i < planet_count; i++)
+		{
+			if (dist[i] < planet_rad[i])
+				alive = false;
+		}
+		if (alive)
 		{
 			size++;
 			void* temp = realloc(trajectory, size * sizeof(vec));
@@ -109,7 +117,16 @@ public:
 			else
 				exit(MEMORY_ERROR);
 			obj_work = obj;
-			runge_kutta_step(&obj, timer.step(&timer), mass);//Вызов функции, указатель на которую мы получили при вызове
+			obj.a = { 0, 0, 0 };
+			object_t t;
+			for (i = 0; i < planet_count; i++)
+			{
+				//obj.a = vec_add(obj.a, force(((planet*)stack[i])->coord, obj.r, ((planet*)stack[i])->mass, self_mass));
+				runge_kutta_step(&obj, timer.step(&timer), planet_mass[i], self_mass);
+			}
+			//	obj.a = force(((planet*)stack[0])->coord, obj.r, ((planet*)stack[0])->mass, self_mass);
+			//runge_kutta_step(&obj, timer.step(&timer), planet_mass[0] , self_mass);//Вызов функции, указатель на которую мы получили при вызове
+			//euler_step(&obj, timer.step(&timer));
 			rect_set(&r, obj_work.r.x, obj_work.r.y,obj_work.r.z, obj.r.x, obj.r.y, obj.r.z);//Заполнение координат вектора
 			r.a = vec_transform(r.a, &view.math, &view.screen);//Перевод кооринат точки в экранные
 			r.b = vec_transform(r.b, &view.math, &view.screen);
@@ -118,14 +135,14 @@ public:
 			
 			double k = 10, 
 				k1 = 150, k2 = k1 * k, k3 = 30, 
-				k4 = 1.0 / 10, k5 = k4 * k, k6 = k3,
-				r_vec;
+				k4 = 1.0 / 3, k5 = k4 * k, k6 = k3,
+				r1;
 
 			glLineWidth(3);
 				
 			glPushMatrix();
 			
-			r_vec = sqrt(obj.v.x * obj.v.x + obj.v.y * obj.v.y + obj.v.z * obj.v.z) / k1;
+			r1 = sqrt(obj.v.x * obj.v.x + obj.v.y * obj.v.y + obj.v.z * obj.v.z) / k1;
 			glBegin(GL_LINES);
 			glColor3f(1, 0, 0);
 			glVertex3f(0, 0, 0);
@@ -133,15 +150,15 @@ public:
 			glEnd();
 			glTranslatef(obj.v.x / k1, obj.v.y / k1, obj.v.z / k1);
 			glBegin(GL_LINE_STRIP);
-			glVertex3f(-obj.v.x / k2 + r_vec / k3, -obj.v.y / k2 + r_vec / k3, -obj.v.z / k2 + r_vec / k3);
+			glVertex3f(-obj.v.x / k2 + r1 / k3, -obj.v.y / k2 + r1 / k3, -obj.v.z / k2 + r1 / k3);
 			glVertex3f(0, 0, 0);
-			glVertex3f(-obj.v.x / k2 - r_vec / k3, -obj.v.y / k2 - r_vec / k3, -obj.v.z / k2 - r_vec / k3);
+			glVertex3f(-obj.v.x / k2 - r1 / k3, -obj.v.y / k2 - r1 / k3, -obj.v.z / k2 - r1 / k3);
 			glEnd();
 			glPopMatrix();
 
 			glPushMatrix();
 
-			r_vec = sqrt(obj.a.x * obj.a.x + obj.a.y * obj.a.y + obj.a.z * obj.a.z) / k4;
+			r1 = sqrt(obj.a.x * obj.a.x + obj.a.y * obj.a.y + obj.a.z * obj.a.z) / k4;
 			glBegin(GL_LINES);
 			glColor3f(0, 1, 0);
 			glVertex3f(0, 0, 0);
@@ -149,9 +166,9 @@ public:
 			glEnd();
 			glTranslatef(obj.a.x / k4, obj.a.y / k4, obj.a.z / k4);
 			glBegin(GL_LINE_STRIP);
-			glVertex3f(-obj.a.x / k5 + r_vec / k6, -obj.a.y / k5 + r_vec / k6, -obj.a.z / k5 + r_vec / k6);
+			glVertex3f(-obj.a.x / k5 + r1 / k6, -obj.a.y / k5 + r1 / k6, -obj.a.z / k5 + r1 / k6);
 			glVertex3f(0, 0, 0);
-			glVertex3f(-obj.a.x / k5 - r_vec / k6, -obj.a.y / k5 - r_vec / k6, -obj.a.z / k5 - r_vec / k6);
+			glVertex3f(-obj.a.x / k5 - r1 / k6, -obj.a.y / k5 - r1 / k6, -obj.a.z / k5 - r1 / k6);
 			glEnd();
 			glPopMatrix();
 
@@ -226,7 +243,7 @@ public:
 			glBindTexture(GL_TEXTURE_2D, texture[1]);
 			glTexImage2D(GL_TEXTURE_2D, 0, 3, texture2->sizeX, texture2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2->data);
 
-			for (int i = 0; i < 6; i++)
+			for (i = 0; i < 6; i++)
 			{
 				if (i == 0)
 				{
@@ -279,8 +296,12 @@ public:
 			}
 			glEnd();
 		}
-		r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y + obj.r.z * obj.r.z;
-		r1 = sqrt(r1);
+		for (i = 0; i < planet_count; i++)
+		{
+			dist[i] = range(obj.r, planet_pos[i]);
+		}
+		//r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y + obj.r.z * obj.r.z;
+		//r1 = sqrt(r1);
 	}
 };
 #endif

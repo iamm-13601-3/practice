@@ -13,14 +13,10 @@ int main(void)
 		20, 
 		6e+23, 
 		vec{0, 0, 0});	
-	planets << new planet(
-		20, 
-		6e+23, 
-		vec{2e7 * 3, 0, 0});
 	planets << new satellite( //ƒобавление спутника, аргументами принимает радиус, начальное положение, скорость и массу
 		1.5, 
 		vec{0, 2e7, 0},
-		vec{20e3, 5900, 0},
+		vec{15e3, 5900, 0},
 		100); 
 //	planets << new axis(); //ƒобавление осей координат
 	planets << new background();

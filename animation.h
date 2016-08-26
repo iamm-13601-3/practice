@@ -55,7 +55,10 @@ public:
 	virtual void keyboard(unsigned char key, int x, int y) //Виртуальный метод обработки нажатий клавиатуры
 	{
 	}
-	virtual void mouse(int button, int state, int mouse_x, int mouse_y) //Виртуальный метод обработки движений мыши
+	virtual void mouse_button(int button, int state, int mouse_x, int mouse_y) //Виртуальный метод обработки нажатий кнопок мыши
+	{
+	}
+	virtual void mouse_move(int mouse_x, int mouse_y) //Виртуальный метод обработки движений мыши
 	{
 	}
 	virtual void load_texture(LPCSTR name)
@@ -128,13 +131,16 @@ public:
 class anim //Класс, который управляет всей анимацией
 {
 private:
+	static anim instance; //Единственный экземпляр класса
+	LARGE_INTEGER frequency, start_time; //Переменные времени
+	double angle_x, angle_y;
+	POINT start_pos;
 	static void reshape(int w, int h); //Конкретные методы обработки событий и рисования
 	static void display(void);
 	static void idle(void);
 	static void keyboard(unsigned char key, int x, int y);
-	static void mouse(int button, int state, int mouse_x, int mouse_y);
-	static anim instance; //Единственный экземпляр класса
-	LARGE_INTEGER frequency, start_time; //Переменные времени
+	static void mouse_button(int button, int state, int mouse_x, int mouse_y);
+	static void mouse_move(int mouse_x, int mouse_y);
 	anim();
 	~anim() //Очистка памяти
 	{

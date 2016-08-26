@@ -22,12 +22,15 @@ anim::anim(void) //Констуктор класса anim
 	glutDisplayFunc(anim::display); //Вызов функций обработки событий и рисования
 	glutReshapeFunc(anim::reshape);
 	glutKeyboardFunc(anim::keyboard);
-	glutMouseFunc(anim::mouse);
+	glutMouseFunc(anim::mouse_button);
+	glutMotionFunc(anim::mouse_move);
 	glutIdleFunc(anim::idle);
 	glutFullScreen(); //Включение полного экрана, при необходимости для отладки можно отключить
 
 	QueryPerformanceFrequency(&instance.frequency); //Сохранение начального времени и частоты
 	QueryPerformanceCounter(&instance.start_time);
+
+	GetCursorPos(&instance.start_pos);
 }
 
 void anim::display(void) //Общая функция рисования
@@ -37,9 +40,9 @@ void anim::display(void) //Общая функция рисования
 		up(0, 1, 0);
 	GLfloat light1_diffuse[] = {1.0, 1.0, 1.0};
 	GLfloat light1_position[] = {
-		100.0 /** sin(get_time())*/,
-		100.0 /** cos(get_time())*/,
-		0, 
+		100.0 * sin(get_time()),
+		0,
+		100.0 * cos(get_time()),
 		1.0};
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Очистка буферов
@@ -48,7 +51,9 @@ void anim::display(void) //Общая функция рисования
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
 	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 	glPushMatrix();
-	glRotated(get_time() * 5, 0, 1, 0);
+	glRotated(instance.angle_y, 0, 1, 0);
+	glRotated(instance.angle_x, 1, 0, -1);
+//	glRotated(get_time() * 5, 0, 1, 0);
 	for (unsigned int i = 0; i < instance.stack.size(); i++) //Вызов функций рисования для каждого объекта
 		instance.stack[i]->draw(instance.stack);
 	glPopMatrix();
@@ -86,10 +91,18 @@ void anim::keyboard(unsigned char key, int x, int y) //Обработка нажатий на клав
 		instance.stack[i]->keyboard(key, x, y);
 }
 
-void anim::mouse(int button, int state, int mouse_x, int mouse_y) //Аналогично с мышкой
+void anim::mouse_button(int button, int state, int mouse_x, int mouse_y)
 {
 	for (unsigned int i = 0; i < instance.stack.size(); i++)
-		instance.stack[i]->mouse(button, state, mouse_x, mouse_y);
+		instance.stack[i]->mouse_button(button, state, mouse_x, mouse_y);
+}
+
+void anim::mouse_move(int mouse_x, int mouse_y)
+{
+	instance.angle_y = mouse_x - instance.start_pos.x;
+//	instance.angle_x = mouse_y / 3;
+	for (unsigned int i = 0; i < instance.stack.size(); i++)
+		instance.stack[i]->mouse_move(mouse_x, mouse_y);
 }
 
 void anim::idle(void) //Обработка в случае остутствия действий

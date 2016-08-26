@@ -12,7 +12,6 @@ class satellite : public sphere
 {
 private:
 	float a, b, c;
-	int i;
 	GLUquadricObj* disk;
 	AUX_RGBImageRec *texture1, *texture2;
 	GLuint texture[2];
@@ -102,7 +101,7 @@ public:
 		}
 
 		glColor3d(color.x, color.y, color.z);
-		int i = 0;
+		unsigned int i = 0;
 		for (i = 0; i < planet_count; i++)
 		{
 			if (dist[i] < planet_rad[i])
@@ -135,14 +134,14 @@ public:
 			
 			double k = 10, 
 				k1 = 150, k2 = k1 * k, k3 = 30, 
-				k4 = 1.0 / 3, k5 = k4 * k, k6 = k3,
-				r1;
+				k4 = 1.0 / 10, k5 = k4 * k, k6 = k3,
+				r_vec;
 
 			glLineWidth(3);
 				
 			glPushMatrix();
 			
-			r1 = sqrt(obj.v.x * obj.v.x + obj.v.y * obj.v.y + obj.v.z * obj.v.z) / k1;
+			r_vec = sqrt(obj.v.x * obj.v.x + obj.v.y * obj.v.y + obj.v.z * obj.v.z) / k1;
 			glBegin(GL_LINES);
 			glColor3f(1, 0, 0);
 			glVertex3f(0, 0, 0);
@@ -150,15 +149,16 @@ public:
 			glEnd();
 			glTranslatef(obj.v.x / k1, obj.v.y / k1, obj.v.z / k1);
 			glBegin(GL_LINE_STRIP);
-			glVertex3f(-obj.v.x / k2 + r1 / k3, -obj.v.y / k2 + r1 / k3, -obj.v.z / k2 + r1 / k3);
+			glVertex3f(-obj.v.x / k2 + r_vec / k3, -obj.v.y / k2 + r_vec / k3, -obj.v.z / k2 + r_vec / k3);
 			glVertex3f(0, 0, 0);
-			glVertex3f(-obj.v.x / k2 - r1 / k3, -obj.v.y / k2 - r1 / k3, -obj.v.z / k2 - r1 / k3);
+			glVertex3f(-obj.v.x / k2 - r_vec / k3, -obj.v.y / k2 - r_vec / k3, -obj.v.z / k2 - r_vec / k3);
 			glEnd();
+
 			glPopMatrix();
 
 			glPushMatrix();
 
-			r1 = sqrt(obj.a.x * obj.a.x + obj.a.y * obj.a.y + obj.a.z * obj.a.z) / k4;
+			r_vec = sqrt(obj.a.x * obj.a.x + obj.a.y * obj.a.y + obj.a.z * obj.a.z) / k4;
 			glBegin(GL_LINES);
 			glColor3f(0, 1, 0);
 			glVertex3f(0, 0, 0);
@@ -166,10 +166,11 @@ public:
 			glEnd();
 			glTranslatef(obj.a.x / k4, obj.a.y / k4, obj.a.z / k4);
 			glBegin(GL_LINE_STRIP);
-			glVertex3f(-obj.a.x / k5 + r1 / k6, -obj.a.y / k5 + r1 / k6, -obj.a.z / k5 + r1 / k6);
+			glVertex3f(-obj.a.x / k5 + r_vec / k6, -obj.a.y / k5 + r_vec / k6, -obj.a.z / k5 + r_vec / k6);
 			glVertex3f(0, 0, 0);
-			glVertex3f(-obj.a.x / k5 - r1 / k6, -obj.a.y / k5 - r1 / k6, -obj.a.z / k5 - r1 / k6);
+			glVertex3f(-obj.a.x / k5 - r_vec / k6, -obj.a.y / k5 - r_vec / k6, -obj.a.z / k5 - r_vec / k6);
 			glEnd();
+
 			glPopMatrix();
 
 			glLineWidth(2);
@@ -243,7 +244,7 @@ public:
 			glBindTexture(GL_TEXTURE_2D, texture[1]);
 			glTexImage2D(GL_TEXTURE_2D, 0, 3, texture2->sizeX, texture2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture2->data);
 
-			for (i = 0; i < 6; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				if (i == 0)
 				{

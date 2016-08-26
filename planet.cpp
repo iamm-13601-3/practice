@@ -3,10 +3,6 @@
 
 #pragma warning(disable:4996)
 
-//planet planet::instance; 
-
-AUX_RGBImageRec* photo_image;
-
 planet::planet(double radius, double mass, vec coord)
 {
 	glEnable(GL_DEPTH_TEST);
@@ -27,7 +23,6 @@ planet::planet(double radius, double mass, vec coord)
 void planet::draw(vector<object*> stack)
 {
 	GLUquadricObj *quadObj;
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 		photo_image->sizeX,
 		photo_image->sizeY,
@@ -44,7 +39,7 @@ void planet::draw(vector<object*> stack)
 	trans = vec_transform(coord, &view.math, &view.screen);
 
 	glTranslatef(trans.x, trans.y, trans.z);
-	glRotated(anim::get_time() * 5, 0, 0, 1);
+	glRotated(anim::get_time() * 15, 0, 0, 1);
 	gluSphere(quadObj, radius, 1000, 1000);
 	glPopMatrix();
 	glPopMatrix();

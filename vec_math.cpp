@@ -71,7 +71,7 @@ void real_timer_start(struct timer_tag* timer)
 
 double real_timer_step(struct timer_tag* timer)
 {
-	double dt = 0.2;
+	double dt;
 	LARGE_INTEGER begin;
 	begin = timer->last;
 	QueryPerformanceCounter(&timer->last);

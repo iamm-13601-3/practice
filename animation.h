@@ -136,6 +136,11 @@ private:
 	static anim instance; //Единственный экземпляр класса
 	LARGE_INTEGER frequency, start_time; //Переменные времени
 	anim();
+	~anim() //Очистка памяти
+	{
+		for (unsigned int i = 0; i < stack.size(); i++)
+			delete stack[i];
+	}
 public:
 	vector<object*> stack; //Вектор, в котором хранятся все объекты
 	double time;

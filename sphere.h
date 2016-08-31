@@ -11,6 +11,10 @@ public:
 
 	void draw(vector<object*> stack)
 	{
+#if USE_SHADERS
+		setShaders(shaders, "shaders/default_vert_shader.glsl", "shaders/default_frag_shader.glsl");
+		glUseProgram(shaders);
+#endif
 		glColor3d(color.x, color.y, color.z);
 		glutSolidSphere(radius, 100, 100);
 	}

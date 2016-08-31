@@ -10,6 +10,10 @@ public:
 	double radius;
 	void draw(vector<object*> stack)
 	{
+#if USE_SHADERS
+		setShaders(shaders, "shaders/default_vert_shader.glsl", "shaders/default_frag_shader.glsl");
+		glUseProgram(shaders);
+#endif
 		glBegin(GL_LINES);
 
 		glColor3d(1, 0, 0);

@@ -5,8 +5,12 @@
 #define MEMORY_ERROR 1
 #define mul (6371e3 / 10)
 #define math_size 15
+#define USE_SHADERS 0
 
-#include <cstdlib> 
+#include <cstdlib>
+#if USE_SHADERS
+#include <GL/glew.h>
+#endif
 #include <GL/glut.h>
 #include <GL/glaux.h>
 #include <windows.h>
@@ -44,7 +48,9 @@ public:
 	vec color; //Цвет в rgb
 	SELESTIAL_BODY_TYPE type;
 	GLuint texture[1];
+#if USE_SHADERS
 	GLuint shaders;
+#endif
 	virtual void draw(vector<object*> stack) //Виртуальный метод рисования, конкретный для каждого типа объектов
 	{
 	}
@@ -69,7 +75,8 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
-	}/*
+	}
+#if USE_SHADERS
 	virtual void printInfoLog(GLuint obj)
 	{
 		int log_size = 0;
@@ -81,6 +88,7 @@ public:
 		char *infoLog = new char[log_size];
 		glGetProgramInfoLog(obj, log_size, &bytes_written, infoLog);
 		std::cerr << infoLog << std::endl;
+
 		delete[] infoLog;
 	}
 
@@ -107,6 +115,7 @@ public:
 		glCompileShader(hdlr);
 		std::cerr << "info log for " << filename << std::endl;
 		printInfoLog(hdlr);
+
 		delete[] buffer;
 		return true;
 	}
@@ -125,13 +134,13 @@ public:
 		glLinkProgram(prog_hdlr);
 		std::cerr << "info log for the linked program" << std::endl;
 		printInfoLog(prog_hdlr);
-	}*/
+	}
+#endif
 };
 
 class anim //Класс, который управляет всей анимацией
 {
 private:
-	static anim instance; //Единственный экземпляр класса
 	LARGE_INTEGER frequency, start_time; //Переменные времени
 	double angle_x, angle_y;
 	POINT start_pos;
@@ -141,7 +150,6 @@ private:
 	static void keyboard(unsigned char key, int x, int y);
 	static void mouse_button(int button, int state, int mouse_x, int mouse_y);
 	static void mouse_move(int mouse_x, int mouse_y);
-	anim();
 	~anim() //Очистка памяти
 	{
 		for (unsigned int i = 0; i < stack.size(); i++)
@@ -152,22 +160,19 @@ public:
 	double time;
 	static double get_time(void);
 	static void set_camera(vec pos, vec dir, vec up);
+	static anim** get_ref(void);
+
+	anim();
 
 	void run(void) //Запуск цикл обслуживания сообщений
 	{
 		glutMainLoop();
 	}
 
-	static anim &get_ref(void) //Доступ к экзепляру класса
-	{
-		return instance;
-	}
-
-	anim & operator << (object *obj) //Перегрузка оператора <<, для более удобного добавления
+	anim *operator << (object *obj) //Перегрузка оператора <<, для более удобного добавления
 	{
 		stack.push_back(obj);
-		return *this;
+		return this;
 	}
 };
-
 #endif

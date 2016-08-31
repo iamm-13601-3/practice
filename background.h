@@ -13,7 +13,7 @@ public:
 	background()
 	{
 	type = BACKGROUND;
-	load_texture("images/space 3 compressed.bmp");
+	load_texture("practice.git/images/space 3 compressed.bmp");
 	size = 150;
 	}
 	virtual void load_texture(LPCSTR name)
@@ -27,6 +27,11 @@ public:
 	}
 	void draw(vector<object*> stack)
 	{
+#if USE_SHADERS
+		setShaders(shaders, "practice.git/shaders/default_vert_shader.glsl", "practice.git/shaders/default_frag_shader.glsl");
+		glUseProgram(shaders);
+#endif
+
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
 

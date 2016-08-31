@@ -29,7 +29,7 @@ public:
 	rect_t r;
 	int counter, size;
 	unsigned int planet_count;
-	virtual void load_texture(LPCSTR name1, LPCSTR name2)
+	void load_texture(LPCSTR name1, LPCSTR name2)
 	{
 		texture1 = auxDIBImageLoadA(name1);
 		glGenTextures(1, &texture[0]);
@@ -56,7 +56,7 @@ public:
 		planet_count = 0;
 		alive = true;
 		obj.a = { 0, 0, 0 };
-		load_texture("images/image2.bmp", "images/image4.bmp"); //«агрузка текстуры
+		load_texture("practice.git/images/image2.bmp", "practice.git/images/image4.bmp"); //«агрузка текстуры
 	}
 
 	void draw(vector<object*> stack)
@@ -64,7 +64,7 @@ public:
 		//инилиазизаци€ переменных(только 1 раз)
 		if (counter == 0)
 		{
-			counter++;
+			counter = 1;
 			while (((planet*)stack[planet_count++])->type == PLANET)
 			{
 				planet_pos = (vec*)realloc(planet_pos,planet_count * sizeof(vec));
@@ -134,7 +134,7 @@ public:
 			
 			double k = 10, 
 				k1 = 150, k2 = k1 * k, k3 = 30, 
-				k4 = 1.0 / 10, k5 = k4 * k, k6 = k3,
+				k4 = 1.0 / 7, k5 = k4 * k, k6 = k3,
 				r_vec;
 
 			glLineWidth(3);
@@ -303,6 +303,10 @@ public:
 		}
 		//r1 = obj.r.x * obj.r.x + obj.r.y * obj.r.y + obj.r.z * obj.r.z;
 		//r1 = sqrt(r1);
+#if USE_SHADERS
+		setShaders(shaders, "practice.git/shaders/default_vert_shader.glsl", "practice.git/shaders/default_frag_shader.glsl");
+		glUseProgram(shaders);
+#endif
 	}
 };
 #endif

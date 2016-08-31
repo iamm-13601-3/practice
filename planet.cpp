@@ -7,7 +7,7 @@ planet::planet(double radius, double mass, vec coord)
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	photo_image = auxDIBImageLoad(L"images/01.bmp");
+	photo_image = auxDIBImageLoad(L"practice.git/images/01.bmp");
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -23,6 +23,10 @@ planet::planet(double radius, double mass, vec coord)
 void planet::draw(vector<object*> stack)
 {
 	GLUquadricObj *quadObj;
+#if USE_SHADERS
+	setShaders(shaders, "practice.git/shaders/default_vert_shader.glsl", "practice.git/shaders/default_frag_shader.glsl");
+	glUseProgram(shaders);
+#endif
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 		photo_image->sizeX,
 		photo_image->sizeY,
